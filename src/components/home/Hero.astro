@@ -1,0 +1,167 @@
+---
+import { site, instrumentCount } from '../../data/site';
+const years = new Date().getFullYear() - site.founded;
+const ticks = Array.from({ length: 61 });
+---
+
+<section id="hero" class="relative flex min-h-[100svh] flex-col overflow-hidden">
+  <!-- Backdrop -->
+  <div class="absolute inset-0" data-hero-bg>
+    <img
+      src="/images/refinery-dusk.jpg"
+      alt="Refinery at dusk lit by thousands of process lights"
+      class="h-full w-full scale-110 object-cover object-[60%_center] opacity-60"
+      fetchpriority="high"
+      data-hero-img
+    />
+    <div class="absolute inset-0 bg-gradient-to-b from-ink/70 via-ink/30 to-ink"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-ink via-ink/60 to-transparent"></div>
+    <div class="grid-bg absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_at_70%_40%,black,transparent_70%)]"></div>
+  </div>
+
+  <div class="wrap relative flex flex-1 flex-col justify-end pb-10 pt-32 md:pb-14">
+    <div class="mb-8 flex flex-wrap items-center gap-x-6 gap-y-2" data-reveal data-reveal-immediate data-delay="0.1">
+      <span class="eyebrow eyebrow-dot text-paper/80">Calibration Technology Services</span>
+      <span class="eyebrow hidden sm:inline">Est. {site.founded} · Karachi, PK</span>
+    </div>
+
+    <h1 class="max-w-[14ch] text-mega font-medium leading-[0.86] tracking-[-0.055em]">
+      <span class="block" data-split="chars" data-split-immediate data-delay="0.15">Precision</span>
+      <span class="block" data-split="chars" data-split-immediate data-delay="0.3">that keeps</span>
+      <span class="block" data-split="chars" data-split-immediate data-delay="0.45"><span class="serif-i font-normal tracking-[-0.03em] text-paper/90">industry</span> moving.</span>
+    </h1>
+
+    <div class="mt-12 grid items-end gap-10 lg:grid-cols-12">
+      <p class="max-w-md text-lg leading-relaxed text-paper/70 lg:col-span-5" data-reveal data-reveal-immediate data-delay="0.9">
+        Traceable calibration, instrumentation support and thermal validation for organisations where accuracy, uptime and audit readiness matter.
+      </p>
+      <div class="flex flex-wrap gap-3 lg:col-span-4" data-reveal data-reveal-immediate data-delay="1">
+        <a href="/enquiry/" class="btn btn-primary" data-magnetic data-label="Enquiry">
+          Request calibration
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 11 11 3M5 3h6v6" stroke="currentColor" stroke-width="1.5" /></svg>
+        </a>
+        <a href="#disciplines" class="btn btn-ghost" data-magnetic>Explore capabilities</a>
+      </div>
+
+      <!-- Readout panel -->
+      <div class="hidden justify-end lg:col-span-3 lg:flex" data-reveal="scale" data-reveal-immediate data-delay="1.1">
+        <div class="w-full max-w-[300px] rounded-2xl border border-white/10 bg-ink/50 p-5 backdrop-blur-xl">
+          <div class="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.2em] text-mute">
+            <span>CH-01 / Live</span>
+            <span class="flex items-center gap-1.5 text-emerald-400"><span class="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400"></span>In tolerance</span>
+          </div>
+          <svg viewBox="0 0 200 118" class="mt-3 w-full" aria-hidden="true">
+            <g>
+              {
+                ticks.map((_, i) => {
+                  const a = Math.PI + (i / 60) * Math.PI;
+                  const major = i % 10 === 0;
+                  const r1 = major ? 76 : 82;
+                  return (
+                    <line
+                      x1={100 + Math.cos(a) * r1}
+                      y1={105 + Math.sin(a) * r1}
+                      x2={100 + Math.cos(a) * 88}
+                      y2={105 + Math.sin(a) * 88}
+                      stroke={i > 52 ? '#e4262c' : major ? 'rgb(238 240 244 / .8)' : 'rgb(238 240 244 / .3)'}
+                      stroke-width={major ? 1.4 : 1}
+                    />
+                  );
+                })
+              }
+            </g>
+            <g data-gauge-needle>
+              <line x1="100" y1="105" x2="100" y2="30" stroke="#e4262c" stroke-width="2" stroke-linecap="round" />
+            </g>
+            <circle cx="100" cy="105" r="6" fill="#05070e" stroke="#eef0f4" stroke-width="1.5" />
+          </svg>
+          <div class="mt-2 flex items-end justify-between">
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-mute">Reading · bar</p>
+              <p class="font-mono text-3xl tabular-nums" data-gauge-value>0.000</p>
+            </div>
+            <div class="text-right font-mono text-[10px] uppercase leading-relaxed tracking-[0.15em] text-mute">
+              <p>Ref <span class="text-paper">±0.05%</span></p>
+              <p>U <span class="text-paper">k=2</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-14 grid grid-cols-2 border-t border-white/10 pt-6 sm:grid-cols-4" data-stagger="0.1">
+      {
+        [
+          { v: site.founded, l: 'Established', pad: 0 },
+          { v: years, l: 'Years in the field', pad: 2 },
+          { v: 7, l: 'Core disciplines', pad: 2 },
+          { v: instrumentCount, l: 'Instrument types', pad: 3 },
+        ].map((s) => (
+          <div class="border-white/10 py-2 pr-4 [&:not(:first-child)]:sm:border-l [&:not(:first-child)]:sm:pl-6">
+            <p class="font-mono text-2xl tabular-nums md:text-3xl">
+              <span data-counter={s.v} data-from={s.v > 1000 ? 1990 : 0} data-pad={s.pad}>{s.v}</span>
+            </p>
+            <p class="mt-1 text-xs uppercase tracking-[0.18em] text-mute">{s.l}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="pointer-events-none absolute bottom-6 right-5 hidden items-center gap-3 font-mono text-[10px] uppercase tracking-[0.25em] text-mute md:flex sm:right-8 lg:right-12" aria-hidden="true">
+    <span>Scroll</span>
+    <span class="relative block h-10 w-px overflow-hidden bg-white/15"><span class="scroll-cue absolute left-0 top-0 h-1/2 w-px bg-paper"></span></span>
+  </div>
+</section>
+
+<style>
+  .scroll-cue { animation: cue 2s var(--ease-in-out-quart) infinite; }
+  @keyframes cue { 0% { transform: translateY(-100%); } 100% { transform: translateY(220%); } }
+</style>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const img = document.querySelector('[data-hero-img]');
+  const needle = document.querySelector('[data-gauge-needle]');
+  const value = document.querySelector<HTMLElement>('[data-gauge-value]');
+  const hero = document.querySelector('#hero');
+
+  if (!reduced && img && hero) {
+    gsap.fromTo(img, { scale: 1.3, opacity: 0 }, { scale: 1.1, opacity: 0.6, duration: 2.6, ease: 'expo.out', delay: 0.1 });
+    gsap.to(img, { yPercent: 18, scale: 1.2, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
+    gsap.to('#hero h1', { yPercent: -20, opacity: 0.2, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
+  }
+
+  // Gauge: settles to a nominal reading, jitters like a live instrument, reacts to scroll + pointer
+  if (needle && value) {
+    const state = { angle: -90, target: 38, jitter: 0 };
+    const render = () => {
+      const a = state.angle + state.jitter;
+      gsap.set(needle, { rotate: a, svgOrigin: '100 105' });
+      const bar = ((a + 90) / 180) * 10;
+      value.textContent = Math.max(0, bar).toFixed(3);
+    };
+    if (reduced) {
+      state.angle = state.target;
+      render();
+    } else {
+      window.caltecReady.then(() => {
+        gsap.to(state, { angle: state.target, duration: 2.4, ease: 'elastic.out(1, 0.4)', delay: 1, onUpdate: render });
+        gsap.ticker.add(() => {
+          state.jitter += ((Math.random() - 0.5) * 0.8 - state.jitter) * 0.08;
+          render();
+        });
+        ScrollTrigger.create({
+          trigger: '#hero',
+          start: 'top top',
+          end: 'bottom top',
+          onUpdate: (self) => gsap.to(state, { angle: state.target + self.progress * 50, duration: 0.6, ease: 'power3.out' }),
+        });
+      });
+    }
+  }
+</script>

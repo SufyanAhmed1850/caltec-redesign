@@ -1,0 +1,30 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import EnquiryForm from '../components/react/EnquiryForm';
+import { services, site } from '../data/site';
+---
+
+<Layout title="Enquiry" description="Request instrument calibration services from CALTEC. Tell us what needs measuring, where it is and when you need it.">
+  <PageHero
+    eyebrow="Request for calibration services"
+    title="Tell us what"
+    accent="needs measuring."
+    lede="Four quick steps. Share your instruments, location and timing — our team will confirm the right scope and send a quotation."
+  />
+  <section class="pb-28 md:pb-40">
+    <div class="wrap">
+      <EnquiryForm client:load services={services.map((s) => s.name)} email={site.emails.calibration} whatsapp={site.phones.whatsapp.href} />
+    </div>
+  </section>
+
+  <section class="border-t border-white/10 py-16">
+    <div class="wrap flex flex-col justify-between gap-6 md:flex-row md:items-center">
+      <p class="text-2xl font-medium tracking-tight">Prefer to talk it through?</p>
+      <div class="flex flex-wrap gap-3">
+        <a href={site.phones.mobile.href} class="btn btn-ghost" data-magnetic>{site.phones.mobile.label}</a>
+        <a href={site.phones.whatsapp.href} target="_blank" rel="noopener" class="btn btn-ghost" data-magnetic>WhatsApp {site.phones.whatsapp.label}</a>
+      </div>
+    </div>
+  </section>
+</Layout>

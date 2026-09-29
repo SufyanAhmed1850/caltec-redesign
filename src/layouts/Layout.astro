@@ -1,0 +1,155 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+const { title, description = site.description, image = '/images/og.jpg' } = Astro.props;
+const fullTitle = title ? `${title} — CALTEC Instrument Services` : 'CALTEC — Precision Calibration Services in Karachi, Pakistan';
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(image, Astro.site);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: site.name,
+  url: site.url,
+  logo: `${site.url}/images/logo.png`,
+  telephone: '+923332283557',
+  email: site.emails.info,
+  foundingDate: String(site.founded),
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Office 203, 2nd Floor, Building LS-1, Plot S/T-3/1, Sector 15, Korangi Industrial Area',
+    addressLocality: 'Karachi',
+    addressCountry: 'PK',
+  },
+  sameAs: [site.linkedin],
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#05070e" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        window.caltecReady = new Promise(function (r) { window.__caltecResolve = r; });
+        try {
+          var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          if (!reduce && sessionStorage.getItem('caltec:loaded') !== '1') d.classList.add('preload');
+          if (!reduce && sessionStorage.getItem('caltec:transition') === '1') d.classList.add('entering');
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="bg-ink text-paper">
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-full focus:bg-paper focus:px-4 focus:py-2 focus:text-ink">Skip to content</a>
+
+    <!-- Preloader: a gauge sweeping through its range -->
+    <div id="preloader" aria-hidden="true" class="fixed inset-0 z-[150] hidden items-center justify-center">
+      <div data-pre-panel class="absolute inset-0 bg-ink-2"></div>
+      <div data-pre-panel class="absolute inset-0 bg-ink"></div>
+      <div class="relative flex flex-col items-center gap-8">
+        <svg data-pre-in viewBox="0 0 200 150" class="w-[min(64vw,300px)]">
+          <g stroke="rgb(255 255 255 / .25)" stroke-width="1">
+            {Array.from({ length: 49 }).map((_, i) => {
+              const a = (-210 + (i * 240) / 48) * (Math.PI / 180);
+              const r1 = i % 6 === 0 ? 70 : 76;
+              return <line x1={100 + Math.cos(a) * r1} y1={100 + Math.sin(a) * r1} x2={100 + Math.cos(a) * 82} y2={100 + Math.sin(a) * 82} />;
+            })}
+          </g>
+          <path data-pre-arc d="M 29 141 A 82 82 0 1 1 171 141" fill="none" stroke="#e4262c" stroke-width="2" />
+          <g data-pre-needle>
+            <line x1="100" y1="100" x2="100" y2="34" stroke="#eef0f4" stroke-width="2" stroke-linecap="round" />
+          </g>
+          <circle cx="100" cy="100" r="5" fill="#eef0f4" />
+        </svg>
+        <div data-pre-in class="font-mono text-6xl font-light tabular-nums tracking-tight sm:text-7xl"><span data-pre-num>000.0</span><span class="text-signal">%</span></div>
+        <div data-pre-in class="eyebrow eyebrow-dot" data-pre-status>Zeroing reference</div>
+      </div>
+      <div data-pre-in class="absolute bottom-8 left-0 right-0 flex justify-between px-8 font-mono text-[10px] uppercase tracking-[0.25em] text-mute">
+        <span>CALTEC / CAL-SEQ</span><span>Karachi · PK</span>
+      </div>
+    </div>
+
+    <!-- Page transition curtain -->
+    <div id="curtain" aria-hidden="true" class="pointer-events-none invisible fixed inset-0 z-[140]">
+      <div data-curtain-panel class="absolute inset-0 bg-signal"></div>
+      <div data-curtain-panel class="absolute inset-0 flex items-center justify-center bg-ink">
+        <div class="flex flex-col items-center gap-4">
+          <span class="eyebrow eyebrow-dot">Calibrating</span>
+          <span data-curtain-title class="text-4xl font-medium tracking-tight md:text-6xl"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Custom cursor -->
+    <div id="cursor" aria-hidden="true" data-state="default" class="pointer-events-none fixed left-0 top-0 z-[160] hidden">
+      <div class="cursor-ring"></div>
+      <span data-cursor-label class="cursor-label"></span>
+    </div>
+
+    <div id="scroll-progress" class="fixed left-0 right-0 top-0 z-[120] h-px origin-left scale-x-0 bg-signal"></div>
+
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+
+    <div class="grain" aria-hidden="true"></div>
+
+    <script>
+      import '../scripts/motion';
+    </script>
+
+    <style is:global>
+      html.preload #preloader { display: flex; }
+      html.entering #curtain { visibility: visible; }
+      html.entering #curtain [data-curtain-panel] { transform: translateY(0); }
+      #curtain [data-curtain-panel] { transform: translateY(100%); }
+
+      html.has-cursor #cursor { display: block; }
+      html.has-cursor, html.has-cursor * { cursor: none !important; }
+      .cursor-ring {
+        width: 14px; height: 14px; border-radius: 999px; background: #eef0f4;
+        mix-blend-mode: difference;
+        transition: width .5s var(--ease-out-expo), height .5s var(--ease-out-expo), background .3s, border .3s;
+      }
+      #cursor { mix-blend-mode: difference; }
+      #cursor[data-state='hover'] .cursor-ring { width: 56px; height: 56px; }
+      #cursor[data-state='text'] .cursor-ring { width: 3px; height: 28px; border-radius: 2px; }
+      #cursor[data-state='label'] { mix-blend-mode: normal; }
+      #cursor[data-state='label'] .cursor-ring { width: 96px; height: 96px; background: #e4262c; }
+      .cursor-label {
+        position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(.6); opacity: 0;
+        font: 500 11px/1 var(--font-mono); letter-spacing: .15em; text-transform: uppercase; color: white; white-space: nowrap;
+        transition: opacity .3s, transform .5s var(--ease-out-expo);
+      }
+      #cursor[data-state='label'] .cursor-label { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    </style>
+  </body>
+</html>

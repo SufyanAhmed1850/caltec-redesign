@@ -1,0 +1,42 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  accent?: string;
+  lede?: string;
+  image?: string;
+  index?: string;
+}
+const { eyebrow, title, accent, lede, image, index } = Astro.props;
+---
+
+<section class="relative overflow-hidden pb-16 pt-40 md:pb-24 md:pt-52">
+  {
+    image && (
+      <div class="absolute inset-0" aria-hidden="true">
+        <img src={image} alt="" class="h-full w-full object-cover opacity-30" data-parallax="0.25" />
+        <div class="absolute inset-0 bg-gradient-to-b from-ink/60 via-ink/70 to-ink" />
+      </div>
+    )
+  }
+  <div class="grid-bg pointer-events-none absolute inset-0 opacity-50 [mask-image:linear-gradient(to_bottom,black,transparent)]"></div>
+  <div class="wrap relative">
+    <div class="mb-10 flex items-center justify-between gap-6" data-reveal data-reveal-immediate>
+      <p class="eyebrow eyebrow-dot">{eyebrow}</p>
+      {index && <p class="font-mono text-xs text-mute">{index}</p>}
+    </div>
+    <h1 class="max-w-[18ch] text-giant font-medium leading-[0.9] tracking-[-0.05em]">
+      <span class="block" data-split="lines" data-split-immediate data-delay="0.05">{title}</span>
+      {accent && <span class="serif-i block font-normal text-paper/60" data-split="lines" data-split-immediate data-delay="0.2">{accent}</span>}
+    </h1>
+    {
+      lede && (
+        <p class="mt-10 max-w-2xl text-lg leading-relaxed text-paper/70 md:text-xl" data-reveal data-reveal-immediate data-delay="0.4">
+          {lede}
+        </p>
+      )
+    }
+    <slot />
+    <div class="ticks-major mt-16 h-4 w-full opacity-40" aria-hidden="true"></div>
+  </div>
+</section>

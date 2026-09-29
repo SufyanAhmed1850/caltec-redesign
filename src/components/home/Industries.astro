@@ -1,0 +1,75 @@
+---
+import { industries } from '../../data/site';
+const imgs = ['/images/refinery-dusk.jpg', '/images/plant-wide.jpg', '/images/refinery-night.jpg'];
+---
+
+<section class="relative overflow-hidden py-28 md:py-40" data-industries>
+  <div class="wrap grid gap-16 lg:grid-cols-12">
+    <div class="lg:col-span-4">
+      <div class="lg:sticky lg:top-32">
+        <p class="eyebrow eyebrow-dot mb-5">Sectors served</p>
+        <h2 class="text-huge font-medium leading-[0.95] tracking-[-0.045em]" data-split="lines">
+          Built for <span class="serif-i text-paper/60">operating</span> reality.
+        </h2>
+        <p class="mt-8 max-w-sm text-lg leading-relaxed text-paper/60" data-reveal>
+          Our engineers learned their trade inside pharmaceutical plants, power stations, paper mills, petrochemical sites, dairies and breweries. We speak your process.
+        </p>
+      </div>
+    </div>
+
+    <ul class="border-t border-white/10 lg:col-span-8" data-industry-list>
+      {
+        industries.map((ind, i) => (
+          <li data-industry={i % imgs.length} class="group relative border-b border-white/10">
+            <div class="flex items-center justify-between gap-6 py-6 md:py-7">
+              <div class="flex items-baseline gap-5 md:gap-8">
+                <span class="w-8 font-mono text-xs text-mute">{String(i + 1).padStart(2, '0')}</span>
+                <span class="text-[clamp(1.75rem,4vw,3.6rem)] font-medium leading-none tracking-[-0.04em] text-paper/80 transition-all duration-700 ease-[var(--ease-out-expo)] group-hover:translate-x-4 group-hover:text-paper">
+                  {ind.name}
+                </span>
+              </div>
+              <span class="hidden text-right text-sm text-mute transition-colors duration-500 group-hover:text-paper sm:block">{ind.note}</span>
+            </div>
+            <span class="absolute bottom-[-1px] left-0 h-px w-full origin-left scale-x-0 bg-signal transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-x-100" />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <!-- Floating preview that follows the pointer -->
+  <div data-industry-float class="pointer-events-none fixed left-0 top-0 z-30 hidden h-[260px] w-[200px] overflow-hidden rounded-2xl opacity-0 md:block" aria-hidden="true">
+    {imgs.map((src, i) => <img src={src} alt="" loading="lazy" data-float-img={i} class="absolute inset-0 h-full w-full scale-150 object-cover opacity-0" />)}
+  </div>
+</section>
+
+<script>
+  import gsap from 'gsap';
+  const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const float = document.querySelector<HTMLElement>('[data-industry-float]');
+  const list = document.querySelector<HTMLElement>('[data-industry-list]');
+  if (fine && float && list) {
+    gsap.set(float, { xPercent: -50, yPercent: -50 });
+    const xTo = gsap.quickTo(float, 'x', { duration: 0.7, ease: 'power3' });
+    const yTo = gsap.quickTo(float, 'y', { duration: 0.7, ease: 'power3' });
+    const rTo = gsap.quickTo(float, 'rotate', { duration: 0.9, ease: 'power3' });
+    let lastX = 0;
+    const imgs = float.querySelectorAll<HTMLElement>('[data-float-img]');
+    list.addEventListener('pointermove', (e) => {
+      xTo(e.clientX);
+      yTo(e.clientY);
+      rTo(gsap.utils.clamp(-12, 12, (e.clientX - lastX) * 0.6));
+      lastX = e.clientX;
+    });
+    list.addEventListener('pointerenter', () => gsap.to(float, { opacity: 1, scale: 1, duration: 0.5, ease: 'expo.out' }));
+    list.addEventListener('pointerleave', () => gsap.to(float, { opacity: 0, scale: 0.6, duration: 0.5, ease: 'expo.out' }));
+    list.querySelectorAll<HTMLElement>('[data-industry]').forEach((li) => {
+      li.addEventListener('pointerenter', () => {
+        const idx = Number(li.dataset.industry);
+        imgs.forEach((img, i) =>
+          gsap.to(img, { opacity: i === idx ? 1 : 0, scale: i === idx ? 1 : 1.4, duration: 0.8, ease: 'expo.out' }),
+        );
+      });
+    });
+  }
+</script>

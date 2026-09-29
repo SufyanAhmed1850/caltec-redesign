@@ -1,0 +1,54 @@
+---
+import Menu from './react/Menu';
+import { nav, services, site } from '../data/site';
+const path = Astro.url.pathname;
+---
+
+<header
+  id="site-header"
+  data-scrolled="false"
+  class="fixed inset-x-0 top-0 z-[110] transition-[transform,background-color,backdrop-filter] duration-700 ease-[var(--ease-out-expo)]"
+>
+  <div class="wrap flex h-[76px] items-center justify-between gap-6">
+    <a href="/" class="group relative z-[2] flex items-center gap-3" aria-label="CALTEC home" data-label="Home">
+      <img src="/images/logo.png" alt="CALTEC Instrument Services Co" width="363" height="104" class="h-9 w-auto brightness-0 invert transition-opacity group-hover:opacity-80 md:h-10" />
+    </a>
+
+    <nav aria-label="Primary" class="hidden items-center gap-1 rounded-full border border-white/10 bg-ink/40 p-1.5 backdrop-blur-xl lg:flex">
+      {
+        nav.map((item) => {
+          const active = path.startsWith(item.href) || (item.href === '/services/' && services.some((s) => path.startsWith(`/${s.slug}`)));
+          return (
+            <a
+              href={item.href}
+              data-label={item.label}
+              class:list={[
+                'relative rounded-full px-4 py-2 text-[13px] font-medium tracking-tight transition-colors duration-300',
+                active ? 'bg-paper text-ink' : 'text-paper/70 hover:bg-white/10 hover:text-paper',
+              ]}
+            >
+              {item.label}
+            </a>
+          );
+        })
+      }
+    </nav>
+
+    <div class="relative z-[2] flex items-center gap-3">
+      <span class="hidden font-mono text-[11px] uppercase tracking-[0.2em] text-mute xl:inline">KHI <span data-clock>--:--:--</span></span>
+      <a href="/enquiry/" data-label="Enquiry" data-magnetic="0.25" class="btn btn-primary hidden !py-2.5 sm:inline-flex">
+        Request calibration
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 11 11 3M5 3h6v6" stroke="currentColor" stroke-width="1.5" /></svg>
+      </a>
+      <Menu client:idle nav={nav} services={services.map((s) => ({ name: s.short, href: `/${s.slug}/`, index: s.index }))} phone={site.phones.mobile} email={site.emails.info} />
+    </div>
+  </div>
+</header>
+
+<style>
+  #site-header[data-scrolled='true'] {
+    background: rgb(5 7 14 / 0.6);
+    backdrop-filter: blur(16px) saturate(140%);
+    border-bottom: 1px solid rgb(255 255 255 / 0.06);
+  }
+</style>

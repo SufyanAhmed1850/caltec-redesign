@@ -1,0 +1,52 @@
+---
+import { getImage } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import CTA from '../components/CTA.astro';
+import ProfileViewer from '../components/react/ProfileViewer';
+
+const titles = [
+  'CALTEC Business Profile',
+  'CalSoft',
+  'Calibration Certification',
+  'Why Is It So Important?',
+  'Calibration Benefits',
+  'Standard Requirements',
+  'Management Software',
+  'Calibration Certificate Software',
+  'Software Benefits',
+  'Verification Certificate Sample',
+  'Calibration Certificate Sample',
+  'Our Tags',
+  'Certification',
+  'Thank You',
+];
+
+const files = import.meta.glob<{ default: ImageMetadata }>('../assets/profile/*.jpg', { eager: true });
+const pages = await Promise.all(
+  titles.map(async (title, i) => {
+    const src = files[`../assets/profile/p${String(i + 1).padStart(2, '0')}.jpg`].default;
+    const [full, thumb] = await Promise.all([
+      getImage({ src, width: 1600, format: 'webp', quality: 82 }),
+      getImage({ src, width: 320, format: 'webp', quality: 70 }),
+    ]);
+    return { title, src: full.src, thumb: thumb.src };
+  }),
+);
+---
+
+<Layout title="Business Profile" description="Browse the CALTEC Instrument Services business profile: calibration certification, CalSoft management software, certificate samples and more.">
+  <PageHero
+    eyebrow="Business profile"
+    title="The CALTEC profile,"
+    accent="page by page."
+    lede="Our capabilities, certification process, calibration management software and sample certificates — flip through, or download the full PDF."
+  />
+  <section class="pb-28 md:pb-40">
+    <div class="wrap">
+      <ProfileViewer client:load pages={pages} pdf="/docs/caltec-profile.pdf" />
+      <p class="mt-6 text-center font-mono text-[11px] uppercase tracking-[0.2em] text-mute">Drag, swipe or use ← → keys</p>
+    </div>
+  </section>
+  <CTA />
+</Layout>

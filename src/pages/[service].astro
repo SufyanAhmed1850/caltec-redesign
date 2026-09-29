@@ -1,0 +1,93 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import CTA from '../components/CTA.astro';
+import Icon from '../components/Icon.astro';
+import InstrumentExplorer from '../components/react/InstrumentExplorer';
+import { services, type Service } from '../data/site';
+
+export function getStaticPaths() {
+  return services.map((s, i) => ({ params: { service: s.slug }, props: { service: s, next: services[(i + 1) % services.length] } }));
+}
+
+const { service, next } = Astro.props as { service: Service; next: Service };
+---
+
+<Layout title={service.name} description={`${service.lede} ${service.instruments.length} instrument types covered by CALTEC in Karachi.`} image={service.image}>
+  <PageHero eyebrow={service.kicker} title={service.name} lede={service.lede} image={service.image} index={`${service.index} / 07`}>
+    <div class="mt-10 flex flex-wrap gap-3" data-reveal data-reveal-immediate data-delay="0.5">
+      <a href="#scope" class="btn btn-primary" data-magnetic>Browse the scope</a>
+      <a href={`/enquiry/?service=${encodeURIComponent(service.name)}`} class="btn btn-ghost" data-magnetic data-label="Enquiry">Request a quote</a>
+    </div>
+  </PageHero>
+
+  <section class="py-20 md:py-28">
+    <div class="wrap grid gap-14 lg:grid-cols-12">
+      <div class="lg:col-span-5">
+        <div class="lg:sticky lg:top-32">
+          <span class="grid h-20 w-20 place-items-center rounded-full border border-white/15 text-signal" data-reveal="scale">
+            <Icon name={service.slug} class="h-9 w-9" />
+          </span>
+          <dl class="mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10" data-stagger="0.06">
+            {
+              service.parameters.map((p, i) => (
+                <div class="bg-ink p-5">
+                  <dt class="font-mono text-[10px] uppercase tracking-[0.2em] text-mute">P-{String(i + 1).padStart(2, '0')}</dt>
+                  <dd class="mt-2 text-[15px] leading-snug">{p}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+      </div>
+      <div class="lg:col-span-7">
+        {
+          service.body.map((p, i) => (
+            <p class:list={['leading-[1.35] tracking-[-0.02em]', i === 0 ? 'text-[clamp(1.5rem,2.6vw,2.4rem)] font-medium' : 'mt-8 text-lg leading-relaxed text-paper/65']} data-scrub-words={i === 0 ? '' : undefined} data-reveal={i === 0 ? undefined : ''}>
+              {p}
+            </p>
+          ))
+        }
+        <ul class="mt-12 grid gap-4 sm:grid-cols-2" data-stagger>
+          {
+            ['Traceable reference standards', 'As-found & as-left results', 'On-site or Karachi workshop', 'Certificates ready for audit'].map((t) => (
+              <li class="flex items-center gap-3 rounded-xl border border-white/10 px-4 py-3.5 text-[15px]">
+                <Icon name="check" class="h-4 w-4 text-signal" />
+                {t}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="scope" class="border-y border-white/10 bg-ink-2 py-20 md:py-28">
+    <div class="wrap">
+      <div class="mb-12 flex flex-wrap items-end justify-between gap-6">
+        <div>
+          <p class="eyebrow eyebrow-dot mb-5">Calibration scope</p>
+          <h2 class="text-huge font-medium leading-[0.95] tracking-[-0.045em]" data-split="lines">What we calibrate.</h2>
+        </div>
+        <p class="max-w-sm text-paper/60" data-reveal>Select the instruments you have and we'll pre-fill your enquiry.</p>
+      </div>
+      <InstrumentExplorer client:visible instruments={service.instruments} service={service.name} />
+    </div>
+  </section>
+
+  <!-- Next service -->
+  <a href={`/${next.slug}/`} data-label={next.short} data-cursor="Next" class="group relative block overflow-hidden py-24 md:py-36">
+    <img src={next.image} alt="" loading="lazy" class="absolute inset-0 h-full w-full scale-110 object-cover opacity-0 transition duration-[1.4s] ease-[var(--ease-out-expo)] group-hover:scale-100 group-hover:opacity-25" />
+    <div class="wrap relative">
+      <p class="eyebrow mb-6">Next discipline · {next.index}</p>
+      <p class="flex items-center justify-between gap-6 text-giant font-medium leading-[0.9] tracking-[-0.05em]">
+        <span class="transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:translate-x-4">{next.short}</span>
+        <span class="grid h-16 w-16 shrink-0 place-items-center rounded-full border border-white/20 transition duration-700 group-hover:-rotate-45 group-hover:border-signal group-hover:bg-signal md:h-24 md:w-24">
+          <Icon name="arrow" class="h-6 w-6 md:h-8 md:w-8" />
+        </span>
+      </p>
+    </div>
+  </a>
+
+  <CTA />
+</Layout>

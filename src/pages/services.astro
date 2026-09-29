@@ -1,0 +1,70 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import CTA from '../components/CTA.astro';
+import Icon from '../components/Icon.astro';
+import { services, instrumentCount } from '../data/site';
+---
+
+<Layout title="Calibration Services" description="Pressure, temperature, electrical, mechanical, precision and flow meter calibration plus thermal mapping and validation in Karachi, Pakistan.">
+  <PageHero
+    eyebrow="Services"
+    title="Seven disciplines."
+    accent="One accountable team."
+    lede={`Laboratory capability, field expertise and clear documentation across ${instrumentCount} instrument types — delivered on site or at our Karachi workshop.`}
+    image="/images/refinery-night.jpg"
+  />
+
+  <section class="pb-24 md:pb-36">
+    <div class="wrap">
+      <ul class="border-t border-white/10" data-svc-list>
+        {
+          services.map((s) => (
+            <li class="border-b border-white/10">
+              <a href={`/${s.slug}/`} data-cursor="Explore" data-label={s.short} class="group relative grid items-center gap-6 overflow-hidden py-8 md:grid-cols-12 md:py-12">
+                <span class="absolute inset-0 origin-bottom scale-y-0 bg-paper transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-y-100" />
+                <span class="relative font-mono text-xs text-mute transition-colors duration-500 group-hover:text-ink/50 md:col-span-1 md:pl-4">{s.index}</span>
+                <span class="relative text-[clamp(2.2rem,5.5vw,5.5rem)] font-medium leading-none tracking-[-0.045em] transition-[color,transform] duration-700 ease-[var(--ease-out-expo)] group-hover:translate-x-3 group-hover:text-ink md:col-span-6">
+                  {s.short}
+                </span>
+                <span class="relative text-[15px] leading-relaxed text-paper/60 transition-colors duration-500 group-hover:text-ink/70 md:col-span-3">{s.lede}</span>
+                <span class="relative flex items-center justify-between gap-4 md:col-span-2 md:justify-end md:pr-4">
+                  <span class="font-mono text-xs text-mute group-hover:text-ink/60">{s.instruments.length} types</span>
+                  <span class="grid h-12 w-12 place-items-center rounded-full border border-white/20 transition duration-700 group-hover:-rotate-45 group-hover:border-ink group-hover:bg-ink group-hover:text-paper">
+                    <Icon name={s.slug} class="h-5 w-5" />
+                  </span>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="border-t border-white/10 bg-ink-2 py-24 md:py-32">
+    <div class="wrap grid gap-12 md:grid-cols-12">
+      <div class="md:col-span-5">
+        <p class="eyebrow eyebrow-dot mb-5">Beyond calibration</p>
+        <h2 class="text-huge font-medium leading-[0.95] tracking-[-0.045em]" data-split="lines">Supply, install, <span class="serif-i text-paper/60">maintain.</span></h2>
+      </div>
+      <div class="grid gap-6 sm:grid-cols-2 md:col-span-7" data-stagger>
+        {
+          [
+            ['Instrument supply', 'We source and supply a wide range of instrumentation — plus a selection of quality used instruments.'],
+            ['Installation', 'From control system installation to upgrades, our engineers commission instruments correctly the first time.'],
+            ['Monitoring systems', 'We provide, install and operate temperature monitoring systems matched to your compliance needs.'],
+            ['Repair workshop', 'Our Karachi workshop is fully equipped to diagnose and repair instruments between calibrations.'],
+          ].map(([t, d]) => (
+            <div class="rounded-2xl border border-white/10 p-6">
+              <p class="text-xl font-medium">{t}</p>
+              <p class="mt-3 text-[15px] leading-relaxed text-paper/60">{d}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CTA />
+</Layout>

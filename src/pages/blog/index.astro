@@ -1,0 +1,24 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import PageHero from '../../components/PageHero.astro';
+import PostCard from '../../components/PostCard.astro';
+import CTA from '../../components/CTA.astro';
+
+const posts = (await getCollection('blog')).sort((a, b) => +b.data.date - +a.data.date);
+const [featured, ...rest] = posts;
+---
+
+<Layout title="Journal" description="Calibration insight, checklists and field notes from the CALTEC Instrument Services team in Karachi.">
+  <PageHero eyebrow="Journal" title="Notes from" accent="the field." lede="Checklists, explainers and lessons from calibrating and inspecting instruments across Pakistan’s industries." />
+
+  <section class="pb-28 md:pb-40">
+    <div class="wrap">
+      {featured && <div class="mb-20" data-reveal><PostCard post={featured} large /></div>}
+      <div class="grid gap-x-6 gap-y-16 md:grid-cols-2 lg:grid-cols-3" data-stagger="0.1">
+        {rest.map((p) => <PostCard post={p} />)}
+      </div>
+    </div>
+  </section>
+  <CTA />
+</Layout>

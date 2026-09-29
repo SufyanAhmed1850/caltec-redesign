@@ -1,0 +1,70 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import { site } from '../data/site';
+
+const channels = [
+  { k: 'Mobile', v: site.phones.mobile.label, href: site.phones.mobile.href },
+  { k: 'Landline', v: site.phones.landline.label, href: site.phones.landline.href },
+  { k: 'WhatsApp', v: site.phones.whatsapp.label, href: site.phones.whatsapp.href, ext: true },
+  { k: 'Fax', v: site.phones.fax.label },
+  { k: 'General', v: site.emails.info, href: `mailto:${site.emails.info}` },
+  { k: 'Sales', v: site.emails.sales, href: `mailto:${site.emails.sales}` },
+  { k: 'Calibration', v: site.emails.calibration, href: `mailto:${site.emails.calibration}` },
+];
+---
+
+<Layout title="Contact" description="Contact CALTEC Instrument Services Co in Korangi Industrial Area, Karachi. Phone +92 333 22 83557, email info@caltec.com.pk.">
+  <PageHero eyebrow="Contact" title="Let’s talk" accent="measurement." lede={`Visit our Karachi office, call, or message ${site.contact} and the team directly.`} />
+
+  <section class="pb-28 md:pb-40">
+    <div class="wrap grid gap-16 lg:grid-cols-12">
+      <div class="lg:col-span-5">
+        <div class="rounded-3xl border border-white/10 bg-ink-2 p-8 md:p-10" data-reveal>
+          <p class="eyebrow eyebrow-dot mb-6">Karachi main office</p>
+          <address class="text-2xl font-medium not-italic leading-snug tracking-tight md:text-3xl">
+            {site.address.lines.map((l) => <span class="block">{l}</span>)}
+          </address>
+          <p class="mt-4 font-mono text-sm text-mute">{site.address.poBox}</p>
+          <div class="mt-8 flex items-center justify-between border-t border-white/10 pt-6">
+            <span class="font-mono text-xs uppercase tracking-[0.2em] text-mute">Local time <span class="text-paper" data-clock>--:--:--</span></span>
+            <a href={site.address.map} target="_blank" rel="noopener" class="btn btn-ghost !py-2.5" data-magnetic>Open in Maps ↗</a>
+          </div>
+        </div>
+        <a href="/enquiry/" class="btn btn-primary mt-6 w-full justify-center !py-5 text-base" data-label="Enquiry">Start a calibration enquiry</a>
+      </div>
+
+      <ul class="border-t border-white/10 lg:col-span-7" data-stagger="0.06">
+        {
+          channels.map((c) => (
+            <li class="border-b border-white/10">
+              {c.href ? (
+                <a href={c.href} target={c.ext ? '_blank' : undefined} rel={c.ext ? 'noopener' : undefined} class="group flex items-center justify-between gap-6 py-6">
+                  <span class="font-mono text-xs uppercase tracking-[0.2em] text-mute">{c.k}</span>
+                  <span class="text-right text-[clamp(1.2rem,2.4vw,2.2rem)] font-medium tracking-[-0.03em] transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:-translate-x-3">
+                    {c.v}
+                  </span>
+                </a>
+              ) : (
+                <div class="flex items-center justify-between gap-6 py-6">
+                  <span class="font-mono text-xs uppercase tracking-[0.2em] text-mute">{c.k}</span>
+                  <span class="text-right text-[clamp(1.2rem,2.4vw,2.2rem)] font-medium tracking-[-0.03em] text-paper/60">{c.v}</span>
+                </div>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="relative h-[60vh] min-h-[380px] overflow-hidden border-t border-white/10">
+    <iframe
+      title="CALTEC office location map"
+      src="https://www.google.com/maps?q=Sector%2015%20Korangi%20Industrial%20Area%20Karachi&output=embed"
+      class="absolute inset-0 h-full w-full grayscale invert-[0.92] hue-rotate-180 contrast-[0.9]"
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <div class="pointer-events-none absolute inset-0 shadow-[inset_0_0_120px_40px_#05070e]"></div>
+  </section>
+</Layout>

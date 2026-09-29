@@ -1,0 +1,37 @@
+---
+import { site } from '../data/site';
+interface Props {
+  eyebrow?: string;
+}
+const { eyebrow = 'Keep uncertainty out of the process' } = Astro.props;
+---
+
+<section class="relative overflow-hidden bg-signal py-28 text-white md:py-40">
+  <div class="pointer-events-none absolute inset-0 opacity-[0.12] [background-image:repeating-linear-gradient(90deg,white_0_1px,transparent_1px_12px)]"></div>
+  <div class="wrap relative">
+    <p class="eyebrow mb-8 !text-white/70">{eyebrow}</p>
+    <h2 class="text-giant font-medium leading-[0.88] tracking-[-0.055em]">
+      <span class="block" data-split="chars">Let’s calibrate</span>
+      <span class="block" data-split="chars" data-delay="0.15"><span class="serif-i font-normal">your next</span> reading.</span>
+    </h2>
+    <div class="mt-14 flex flex-col gap-10 border-t border-white/25 pt-10 md:flex-row md:items-center md:justify-between">
+      <div class="flex flex-wrap gap-x-10 gap-y-3 text-lg">
+        <a class="link-u" href={site.phones.mobile.href}>{site.phones.mobile.label}</a>
+        <a class="link-u" href={`mailto:${site.emails.info}`}>{site.emails.info}</a>
+        <a class="link-u" href={site.phones.whatsapp.href} target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+      <a
+        href="/enquiry/"
+        data-magnetic="0.4"
+        data-label="Enquiry"
+        class="group relative grid h-40 w-40 shrink-0 place-items-center self-start rounded-full bg-ink text-center text-sm font-medium text-paper transition-transform duration-700 hover:scale-105 md:h-48 md:w-48 md:self-auto"
+      >
+        <svg class="absolute inset-0 h-full w-full animate-[spin-slow_14s_linear_infinite]" viewBox="0 0 100 100" aria-hidden="true">
+          <defs><path id="cta-circle" d="M50 50m-38 0a38 38 0 1 1 76 0a38 38 0 1 1-76 0" /></defs>
+          <text font-size="7.2" letter-spacing="2.4" fill="currentColor" font-family="JetBrains Mono Variable, monospace"><textPath href="#cta-circle">REQUEST A QUOTATION · REQUEST A QUOTATION ·</textPath></text>
+        </svg>
+        <svg width="26" height="26" viewBox="0 0 14 14" fill="none" class="transition-transform duration-700 group-hover:rotate-45" aria-hidden="true"><path d="M3 11 11 3M5 3h6v6" stroke="currentColor" stroke-width="1.2" /></svg>
+      </a>
+    </div>
+  </div>
+</section>
